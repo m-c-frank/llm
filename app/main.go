@@ -13,7 +13,9 @@ func main() {
 	r := gin.Default()
 
 	// Serve your HTML file
-	r.LoadHTMLGlob("./page/*")
+	r.Static("/css", "./web/css")
+	r.Static("/js", "./web/js")
+	r.LoadHTMLGlob("./web/*.html")
 
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{})

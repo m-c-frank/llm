@@ -1,6 +1,7 @@
 document.getElementById('send-button').addEventListener('click', sendMessage);
 
 function sendMessage() {
+    console.log("attempting to send message")
     const messageInput = document.getElementById('message-input');
     const message = messageInput.value.trim();
     if (!message) return;
@@ -9,7 +10,7 @@ function sendMessage() {
     addMessage('You', message);
 
     // Send message to server
-    fetch('/send', {
+    fetch('/api/llm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message })
