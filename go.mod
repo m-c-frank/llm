@@ -4,7 +4,7 @@ go 1.21.5
 
 require (
 	github.com/gin-gonic/gin v1.9.1
-	github.com/m-c-frank/note v0.0.0-20240114150243-8776c90eaede
+	github.com/m-c-frank/note v0.0.0-20240116160343-521db0f892d3
 )
 
 require (
