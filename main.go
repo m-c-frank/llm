@@ -15,8 +15,6 @@ func main() {
 
 	router.Any("/proxy/*path", proxyHandler)
 
-	router.Static("/app", "./web/build")
-
 	err := router.Run()
 	if err != nil {
 		fmt.Println("Error: ", err)
