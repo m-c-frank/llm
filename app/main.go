@@ -11,6 +11,7 @@ import (
 
 func main() {
 	r := gin.Default()
+	gin.SetMode(gin.DebugMode)
 
 	// Serve your HTML file
 	r.Static("/css", "./web/css")
@@ -22,15 +23,17 @@ func main() {
 	})
 
 	// Endpoint for sending messages
-	r.POST("/llm/api", func(c *gin.Context) {
+	r.POST("/api", func(c *gin.Context) {
 		var chatRequest ChatRequest
 		if err := c.BindJSON(&chatRequest); err != nil {
+			fmt.Println("Error: ", err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
 		response, err := CallChatAPI(chatRequest.Model, chatRequest.Messages)
 		if err != nil {
+			fmt.Println("Error: ", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -38,7 +41,11 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"response": string(response)})
 	})
 
-	r.Run() // By default, it serves on :8080
+	err := r.Run() // By default, it serves on :8080
+	if err != nil {
+		fmt.Println("Error: someting wend wrong")
+		return
+	}
 }
 
 // Message represents a single message in the chat stream.
@@ -63,7 +70,7 @@ func CallChatAPI(model string, messages []Message) ([]byte, error) {
 		return nil, fmt.Errorf("error marshalling request: %w", err)
 	}
 
-	resp, err := http.Post("http://localhost:11434/api/chat", "application/json", bytes.NewBuffer(requestBody))
+	resp, err := http.Post("http://192.168.2.177:11434/api/chat", "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, fmt.Errorf("error sending request to chat API: %w", err)
 	}
