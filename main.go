@@ -60,10 +60,48 @@ func handleChatRequest(chatRequest []byte) error {
 		if err != nil {
 			return err
 		}
-		note.PersistNote(noteContent, noteRepoPath)
+		err = note.PersistNote(noteContent, noteRepoPath)
+		if err != nil {
+			return err
+		}
+		err = sendPostRequest(req.Messages)
+		if err != nil {
+			return err
+		}
+		return err
+	}
+	return err
+}
+
+func sendPostRequest(messages []Message) error {
+	fmt.Println("sending messages now to vectorstore")
+	// Convert your messages to JSON
+	jsonData, err := json.Marshal(messages)
+	if err != nil {
+		fmt.Println("Something went wrong marshalling")
+		return err
 	}
 
-	return err
+	// Create a new POST request
+	url := "http://localhost:8000/api/vectorstore/add"
+	request, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		fmt.Println("Something went wrong posting")
+		return err
+	}
+	request.Header.Set("Content-Type", "application/json")
+
+	// Send the request
+	client := &http.Client{}
+	response, err := client.Do(request)
+	if err != nil {
+		fmt.Println("Something went wrong requesting")
+		return err
+	}
+	defer response.Body.Close()
+
+
+	return nil
 }
 
 func proxyHandler(c *gin.Context) {
