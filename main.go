@@ -110,7 +110,7 @@ func proxyHandler(c *gin.Context) {
 	fmt.Println("Incoming Request JSON:", string(requestBody))
 
 	requestURI := strings.Replace(c.Request.RequestURI, "/proxy", "", -1)
-	remoteURL := "http://192.168.2.177:11434/api" + requestURI
+	remoteURL := "http://localhost:11434/api" + requestURI
 
 	if requestURI == "/chat" {
 		handleChatRequest(requestBody)
