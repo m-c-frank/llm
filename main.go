@@ -17,7 +17,7 @@ func main() {
 
 	router.Any("/proxy/*path", proxyHandler)
 
-	err := router.Run()
+	err := router.Run("localhost:3020")
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return
